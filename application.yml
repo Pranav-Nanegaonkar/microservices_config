@@ -7,7 +7,7 @@ eureka:
 
 logging:
   level:
-    com.app.userservice: DEBUG
+    com.app: DEBUG
 resilience4j:
   circuitbreaker:
     circuitBreakerAspectOrder: 1
@@ -43,5 +43,5 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, resilience4j.circuitbreakers, resilience4j.retries
+        include: *
 
