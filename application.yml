@@ -8,22 +8,26 @@ eureka:
 logging:
   level:
     com.app.userservice: DEBUG
-
 resilience4j:
   circuitbreaker:
+    circuitBreakerAspectOrder: 1
+    configs:
+      default:
+        register-health-indicator: true # <-- Configures it as a standard global indicator
     instances:
       ratingHotelBreaker:
-        register-health-indicator: true
+        base-config: default # <-- Inherit global indicator behavior
         event-consumer-buffer-size: 10
         failure-rate-threshold: 50
         minimum-number-of-calls: 5
         automatic-transition-from-open-to-half-open-enabled: true
-        wait-duration-in-open-state: 6s #  Corrected format
+        wait-duration-in-open-state: 6s
         permitted-number-of-calls-in-half-open-state: 3
         sliding-window-size: 10
         sliding-window-type: count_based
 
   retry:
+    retryAspectOrder: 2
     instances:
       ratingHotelRT:
         max-attempts: 3
@@ -39,4 +43,5 @@ management:
   endpoints:
     web:
       exposure:
-        include: health, resilience4j.circuitbreakers, resilience4j.retries # Added metrics endpoints
+        include: health, resilience4j.circuitbreakers, resilience4j.retries
+
