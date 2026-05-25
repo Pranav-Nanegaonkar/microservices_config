@@ -4,3 +4,39 @@ eureka:
   client:
     fetch-registry: true
     register-with-eureka: true
+
+logging:
+  level:
+    com.app.userservice: DEBUG
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      ratingHotelBreaker:
+        register-health-indicator: true
+        event-consumer-buffer-size: 10
+        failure-rate-threshold: 50
+        minimum-number-of-calls: 5
+        automatic-transition-from-open-to-half-open-enabled: true
+        wait-duration-in-open-state: 6s #  Corrected format
+        permitted-number-of-calls-in-half-open-state: 3
+        sliding-window-size: 10
+        sliding-window-type: count_based
+
+  retry:
+    instances:
+      ratingHotelRT:
+        max-attempts: 3
+        wait-duration: 5s
+
+management:
+  health:
+    circuitbreakers:
+      enabled: true
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: health, resilience4j.circuitbreakers, resilience4j.retries # Added metrics endpoints
