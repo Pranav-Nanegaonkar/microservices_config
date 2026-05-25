@@ -47,4 +47,5 @@ management:
           - circuitbreakers
           - health
           - info
+          - retries
 
